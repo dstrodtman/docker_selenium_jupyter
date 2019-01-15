@@ -3,6 +3,18 @@
 
 This directory contains everything you need to get Selenium up and running in Google Chrome. This will allow you to quickly create identical environments for automating tasks and scraping Javascript enabled pages, and make it easy to run Selenium on AWS.
 
+If you're running in AWS, you'll want to make sure you install Docker and docker-compose as you initialized. Use the following code in the '**Advanced Details**' within the **Configure Instance Details** tab (Step 3):
+
+```
+#!/bin/bash
+curl -sSL https://get.docker.com/ | sh
+usermod -aG docker ubuntu
+curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+```
+
+Full details on my recommended AWS configurations can be found [here](https://git.generalassemb.ly/DSI-US-6/SM-Flex-6/wiki/Creating-an-AWS-instance).
+
 ## Files Contained
 Other than this README, each of the files in this directory is necessary to successfully build out your environment. Hopefully the descriptions below will allow you to update these to your specific needs.
 
@@ -33,6 +45,13 @@ docker-compose up -d
 This method will also contain an internal network linking the containers; the IP address of each is mapped to the service name.
 
 Specifically, this is important because the IP address of the Selenium hub container is mapped to the alias `hub`, which allows us to therefore access our remote Selenium instance through the web address `http://hub:4444/wd/hub`.
+
+## Access Jupyter Lab
+Run
+```
+docker exec jupyter_selenium jupyter notebook list
+```
+to display the token of your currently running lab instance. If running on AWS, you'll want to sub the public IP address of your instance for the localhost.
 
 ## Remote Selenium
 The following code demonstrates how easy it is to use a remote webdriver. Here we specify that we want to use a headless Chrome browser (a browser without a visual display) for our driver, which is hosted on port `4444` of our `hub` service:
